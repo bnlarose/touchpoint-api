@@ -4,4 +4,84 @@ module.exports = gql`
   type Query {
     hello: String!
   }
+
+  """
+  The AuthPayload is returned upon
+  successful user logins and contains
+  both the authorizing token and details
+  of the currently authorized user
+  """
+  type AuthPayload {
+    token: String
+    user: User
+  }
+
+  """
+  Contains application user data
+  """
+  type User {
+    _id: ID
+    first_name: String!
+    last_name: String!
+    username: String!
+    email: String!
+    password: String!
+    """
+    Where this user is based
+    """
+    site: Site
+    department: Department
+    position: Position
+    reports_to: User
+  }
+
+  """
+  Organisational departments
+  """
+  enum Department {
+    CARE
+    ESCALATIONS
+    HELPDESK
+    RETAIL
+    SALES
+  }
+
+  """
+  Job roles currently configured
+  """
+  enum Position {
+    CSR
+    ESCALATIONS
+    HELPDESK
+    MANAGER
+    SUPER
+  }
+
+  """
+  Organisational physical locations
+  """
+  enum Site {
+    ARIMA
+    CC
+    CHAG
+    POS
+    SANDO
+    TOBAGO
+    OFFICE
+  }
+
+  """
+  Encapsulates all non-hierarchical data
+  elements required to create a user
+  """
+  input UserInput {
+    first_name: String!
+    last_name: String!
+    username: String!
+    email: String!
+    password: String!
+    site: Site
+    department: Department
+    position: Position
+  }
 `

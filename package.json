@@ -5,7 +5,7 @@
   "main": "server.js",
   "repository": "https://github.com/bnlarose/touchpoint-api.git",
   "author": "Berhane-Hiwet La Rose <berhane.larose@gmail.com>",
-  "license": "None",
+  "license": "UNLICENSED",
   "private": false,
   "scripts": {
     "server": "nodemon server.js",

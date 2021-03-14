@@ -12,9 +12,9 @@ module.exports = gql`
       username: String!
       email: String!
       password: String!
-      site: Site
-      department: Department
-      position: Position
+      site: String
+      department: String
+      position: String
     ): User
   }
 

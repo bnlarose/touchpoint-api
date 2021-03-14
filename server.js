@@ -4,13 +4,33 @@ const { ApolloServer } = require('apollo-server')
 // Import environment variables
 require('dotenv').config()
 
+// Import mongoose and mongoose models
+const mongoose = require('mongoose')
+const User = require('./src/models/User')
+
+mongoose
+  .connect(
+    process.env.MONGO_URI,
+    {
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+      useNewUrlParser: true
+    }
+  )
+  .then(() => console.log('Connected 🚀 To MongoDB Successfully'))
+
 // Import typeDefs and resolvers
 const typeDefs = require('./src/typeDefs')
 const resolvers = require('./src/resolvers')
 
 const server = new ApolloServer({
   typeDefs,
-  resolvers
+  resolvers,
+  context: () => {
+    return {
+      User
+    }
+  }
 })
 
 server

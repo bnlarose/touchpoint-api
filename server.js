@@ -8,6 +8,9 @@ require('dotenv').config()
 const mongoose = require('mongoose')
 const User = require('./src/models/User')
 
+// Import helper functions
+const { getUserId } = require('./src/utils')
+
 mongoose
   .connect(
     process.env.MONGO_URI,
@@ -26,9 +29,11 @@ const resolvers = require('./src/resolvers')
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: () => {
+  context: ({ req }) => {
     return {
-      User
+      ...req,
+      User,
+      userId: req && req.headers.authorization ? getUserId(req) : null
     }
   }
 })

@@ -2,16 +2,23 @@
   "name": "touchpoint-api",
   "version": "1.0.0",
   "description": "The GraphQL API for Touchpoint CIM Project",
-  "main": "index.js",
+  "main": "server.js",
   "repository": "https://github.com/bnlarose/touchpoint-api.git",
   "author": "Berhane-Hiwet La Rose <berhane.larose@gmail.com>",
   "license": "None",
   "private": false,
+  "scripts": {
+    "server": "nodemon server.js",
+    "start": "node server.js"
+  },
   "dependencies": {
     "apollo-server": "^2.21.1",
     "bcrypt": "^5.0.1",
     "graphql": "^15.5.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }

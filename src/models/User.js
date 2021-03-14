@@ -11,7 +11,8 @@ const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    match: [/^[^\s@]+@[^\s@]+\.[^\s@]{2,}/gm, 'Please provide a valid email address']
   },
   first_name: {
     type: String,

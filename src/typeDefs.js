@@ -5,6 +5,19 @@ module.exports = gql`
     hello: String!
   }
 
+  type Mutation {
+    createUser(
+      first_name: String!
+      last_name: String!
+      username: String!
+      email: String!
+      password: String!
+      site: Site
+      department: Department
+      position: Position
+    ): User
+  }
+
   """
   The AuthPayload is returned upon
   successful user logins and contains
@@ -40,6 +53,7 @@ module.exports = gql`
   """
   enum Department {
     CARE
+    DEV
     ESCALATIONS
     HELPDESK
     RETAIL
@@ -51,6 +65,7 @@ module.exports = gql`
   """
   enum Position {
     CSR
+    DEV
     ESCALATIONS
     HELPDESK
     MANAGER
@@ -63,25 +78,11 @@ module.exports = gql`
   enum Site {
     ARIMA
     CC
+    DEV
     CHAG
     POS
     SANDO
     TOBAGO
     OFFICE
-  }
-
-  """
-  Encapsulates all non-hierarchical data
-  elements required to create a user
-  """
-  input UserInput {
-    first_name: String!
-    last_name: String!
-    username: String!
-    email: String!
-    password: String!
-    site: Site
-    department: Department
-    position: Position
   }
 `

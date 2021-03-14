@@ -33,7 +33,21 @@ module.exports = {
   },
 
   Query: {
-    hello: () => `This is how it begins!`
+    hello: () => `This is how it begins!`,
+
+    // Find a User with the specified userId
+    getUserById: async ( _, { userId }, { User } ) => {
+      // Search the User collection for an instance with that ID
+      const user = await User.findById( userId )
+
+      // Throw an error if no matching User is found
+      if ( !user ) {
+        throw new Error('User not found.')
+      }
+
+      // Return the found user
+      return user
+    }
   },
 
   Mutation: {

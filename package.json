@@ -1,0 +1,10 @@
+{
+  "name": "touchpoint-api",
+  "version": "1.0.0",
+  "description": "The GraphQL API for Touchpoint CIM Project",
+  "main": "index.js",
+  "repository": "https://github.com/bnlarose/touchpoint-api.git",
+  "author": "Berhane-Hiwet La Rose <berhane.larose@gmail.com>",
+  "license": "None",
+  "private": false
+}

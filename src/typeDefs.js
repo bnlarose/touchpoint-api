@@ -6,6 +6,9 @@ module.exports = gql`
   }
 
   type Mutation {
+    """
+    Creates a new User using the supplied details
+    """
     createUser(
       first_name: String!
       last_name: String!
@@ -15,7 +18,16 @@ module.exports = gql`
       site: String
       department: String
       position: String
+      reports_to: String
     ): User
+
+    """
+    Allows a user to authenticate against stored user credentials
+    """
+    login_user(
+      username: String!,
+      password: String!
+    ): AuthPayload
   }
 
   """

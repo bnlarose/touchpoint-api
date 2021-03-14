@@ -1,3 +1,7 @@
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+require('dotenv').config({ path: __dirname + '../.env' })
+
 module.exports = {
   Site: {
     ARIMA: 'arima',
@@ -33,6 +37,7 @@ module.exports = {
   },
 
   Mutation: {
+    // User Mutations
     createUser: async ( _, args, { User } ) => {
       // Check if a User already exists with the specified username
       const user = await User.findOne({ username: args.username })
@@ -62,9 +67,37 @@ module.exports = {
         userData.position = args.position
       }
 
+      if ( args.reports_to ) {
+        userData.reports_to = args.reports_to
+      }
+
       const newUser = await new User( userData ).save()
 
       return newUser
+    },
+
+    login_user: async ( _, { username, password }, { User } ) => {
+      // Check if a user exists with the provided username
+      const user = await User.findOne({ username })
+
+      // Throw an error if no user is found
+      if ( !user ) {
+        throw new Error( 'User not found.' )
+      }
+
+      // Check if the supplied password is valid
+      const isValidPassword = await bcrypt.compare(password, user.password)
+
+      // Throw an error if the passwords do not match
+      if ( !isValidPassword ) {
+        throw new Error( 'Invalid password.' )
+      }
+
+      // Creates a JWT token using the supplied details
+      const token = jwt.sign({ userId: user._id }, process.env.SECRET, { expiresIn: '10h' })
+
+      // Returns the token and user, constituting the AuthPayload
+      return { token, user }
     }
   }
 }

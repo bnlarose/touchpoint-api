@@ -7,6 +7,9 @@
   "author": "Berhane-Hiwet La Rose <berhane.larose@gmail.com>",
   "license": "UNLICENSED",
   "private": false,
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "server": "nodemon server.js",
     "start": "node server.js"

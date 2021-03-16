@@ -5,7 +5,7 @@ require('dotenv').config({ path: __dirname + '../.env' })
 module.exports = {
   Site: {
     ARIMA: 'arima',
-    CC: 'concen',
+    CC: 'contactc',
     DEV: 'developer',
     CHAG: 'chaguanas',
     POS: 'port-of-spain',

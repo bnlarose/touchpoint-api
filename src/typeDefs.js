@@ -98,4 +98,19 @@ module.exports = gql`
     TOBAGO
     OFFICE
   }
+
+  """
+  Encapsulates all non-hierarchical data
+  elements required to create a user
+  """
+  input UserInput {
+      first_name: String!
+      last_name: String!
+      username: String!
+      email: String!
+      password: String!
+      site: Site
+      department: Department
+      position: Position
+  }
 `

@@ -90,7 +90,7 @@ module.exports = {
       return newUser
     },
 
-    login_user: async ( _, { username, password }, { User } ) => {
+    loginUser: async ( _, { username, password }, { User } ) => {
       // Check if a user exists with the provided username
       const user = await User.findOne({ username })
 

@@ -25,7 +25,7 @@ module.exports = gql`
     """
     Allows a user to authenticate against stored user credentials
     """
-    login_user(
+    loginUser(
       username: String!,
       password: String!
     ): AuthPayload

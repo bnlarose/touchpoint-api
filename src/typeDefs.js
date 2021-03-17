@@ -117,5 +117,6 @@ module.exports = gql`
       site: String
       department: String
       position: String
+      reports_to: String
   }
 `

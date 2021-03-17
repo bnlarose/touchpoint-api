@@ -90,6 +90,14 @@ module.exports = {
       return newUser
     },
 
+    bulkCreateUser: async ( _, { docs }, { User } ) => {
+      // Attempt to insert all the submitted User documents and throw an error if something goes wrong
+      const users = await User.create(docs)
+
+      // Return the new User documents to the client
+      return users
+    },
+
     loginUser: async ( _, { username, password }, { User } ) => {
       // Check if a user exists with the provided username
       const user = await User.findOne({ username })

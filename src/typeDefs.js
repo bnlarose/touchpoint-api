@@ -23,6 +23,11 @@ module.exports = gql`
     ): User
 
     """
+    Used to bulk add dummy data
+    """
+    bulkCreateUser(docs: [UserInput!]!):[User]
+
+    """
     Allows a user to authenticate against stored user credentials
     """
     loginUser(
@@ -109,8 +114,8 @@ module.exports = gql`
       username: String!
       email: String!
       password: String!
-      site: Site
-      department: Department
-      position: Position
+      site: String
+      department: String
+      position: String
   }
 `

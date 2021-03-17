@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const Double = require('mongoose-double')
 
 const PackageSchema = new mongoose.Schema({
   name: {
@@ -11,7 +10,7 @@ const PackageSchema = new mongoose.Schema({
     required: true
   },
   price: {
-    type: Double,
+    type: mongoose.Schema.Types.Decimal128,
     required: true
   }
 })

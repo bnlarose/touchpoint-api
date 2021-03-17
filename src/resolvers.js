@@ -38,7 +38,7 @@ module.exports = {
     // Find a User with the specified userId
     getUserById: async ( _, { userId }, { User } ) => {
       // Search the User collection for an instance with that ID
-      const user = await User.findById( userId )
+      const user = await User.findById( userId ).populate('reports_to')
 
       // Throw an error if no matching User is found
       if ( !user ) {

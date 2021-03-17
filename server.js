@@ -7,6 +7,7 @@ require('dotenv').config()
 // Import mongoose and mongoose models
 const mongoose = require('mongoose')
 const User = require('./src/models/User')
+const Package = require('./src/models/Package')
 
 // Import helper functions
 const { getUserId } = require('./src/utils')
@@ -33,6 +34,7 @@ const server = new ApolloServer({
     return {
       ...req,
       User,
+      Package,
       userId: req && req.headers.authorization ? getUserId(req) : null
     }
   }

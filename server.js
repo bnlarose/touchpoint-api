@@ -22,6 +22,7 @@ mongoose
     }
   )
   .then(() => console.log('Connected 🚀 To MongoDB Successfully'))
+  .catch(err => console.error(err))
 
 // Import typeDefs and resolvers
 const typeDefs = require('./src/typeDefs')

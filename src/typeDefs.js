@@ -37,10 +37,9 @@ module.exports = gql`
   }
 
   """
-  The AuthPayload is returned upon
-  successful user logins and contains
-  both the authorizing token and details
-  of the currently authorized user
+  The AuthPayload is returned upon successful user logins and
+  contains both the authorizing token and details of the currently
+  authorized user
   """
   type AuthPayload {
     token: String
@@ -64,6 +63,55 @@ module.exports = gql`
     department: Department
     position: Position
     reports_to: User
+  }
+
+  """
+  Contains the details of the address at which a service instance is located
+  """
+  type ServiceAddress {
+    street: String!
+    city: String!
+    island: String!
+  }
+
+  """
+  Contains the type and number of a phone contact
+  """
+  type Phone {
+    _id: ID
+    category: PhoneType!
+    phone_number: String!
+  }
+
+  """
+  Contains the details of a service account contact
+  """
+  type Contact {
+    _id: ID
+    first_name: String!
+    last_name: String!
+    email: String
+    phone: [Phone]
+  }
+
+  """
+  Represents a service package within the API
+  """
+  type Package {
+    _id: ID
+    name: String
+    lob: LOB
+    price: Float
+  }
+
+  """
+  Contains the details of a service account
+  """
+  type Account {
+    account_number: Int
+    address: ServiceAddress
+    service_list: [Package]!
+    contacts: [Contact!]!
   }
 
   """
@@ -104,19 +152,39 @@ module.exports = gql`
     OFFICE
   }
 
+
+  """
+  Types of phone contacts permitted
+  """
+  enum PhoneType {
+    HOME
+    MOBILE
+    OFFICE
+  }
+
+  """
+  Line of Business designations
+  """
+  enum LOB {
+    INTERNET
+    LANDLINE
+    MOBILE
+    VIDEO
+  }
+
   """
   Encapsulates all non-hierarchical data
   elements required to create a user
   """
   input UserInput {
-      first_name: String!
-      last_name: String!
-      username: String!
-      email: String!
-      password: String!
-      site: String
-      department: String
-      position: String
-      reports_to: String
+    first_name: String!
+    last_name: String!
+    username: String!
+    email: String!
+    password: String!
+    site: String
+    department: String
+    position: String
+    reports_to: String
   }
 `

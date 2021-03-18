@@ -32,8 +32,23 @@ module.exports = {
     SUPER: 'supervisor'
   },
 
+  PhoneType: {
+    HOME: 'home',
+    MOBILE: 'mobile',
+    OFFICE: 'office'
+  },
+
+  LOB: {
+    INTERNET: 'internet',
+    LANDLINE: 'landline',
+    MOBILE: 'mobile',
+    VIDEO: 'video'
+  },
+
   Query: {
     hello: () => `This is how it begins!`,
+
+    // USER QUERIES
 
     // Find a User with the specified userId
     getUserById: async ( _, { userId }, { User } ) => {
@@ -47,11 +62,12 @@ module.exports = {
 
       // Return the found user
       return user
-    }
+    },
   },
 
   Mutation: {
-    // User Mutations
+    // USER MUTATIONS
+
     createUser: async ( _, args, { User } ) => {
       // Check if a User already exists with the specified username
       const user = await User.findOne({ username: args.username })
@@ -120,6 +136,15 @@ module.exports = {
 
       // Returns the token and user, constituting the AuthPayload
       return { token, user }
-    }
+    },
+
+    // PACKAGE MUTATIONS
+    bulkCreatePackages: async ( _, { docs }, { Package }) => {
+      // Attempt to insert all the submitted Package documents and throw an error if something goes wrong
+      const packages = await Package.create(docs)
+
+      // Return the new User documents to the client
+      return packages
+    },
   }
 }

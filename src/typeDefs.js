@@ -34,6 +34,11 @@ module.exports = gql`
       username: String!,
       password: String!
     ): AuthPayload
+
+    """
+    Used to bulk add dummy data
+    """
+    bulkCreatePackages(docs: [PackageInput]!): [Package]
   }
 
   """
@@ -99,9 +104,9 @@ module.exports = gql`
   """
   type Package {
     _id: ID
-    name: String
-    lob: LOB
-    price: Float
+    name: String!
+    lob: LOB!
+    price: Int!
   }
 
   """
@@ -186,5 +191,11 @@ module.exports = gql`
     department: String
     position: String
     reports_to: String
+  }
+
+  input PackageInput {
+    name: String!
+    lob: String!
+    price: Int!
   }
 `

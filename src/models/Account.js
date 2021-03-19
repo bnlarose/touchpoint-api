@@ -20,6 +20,10 @@ const AccountSchema = new mongoose.Schema({
       required: true
     },
   },
+  createdDate: {
+    type: Date,
+    default: Date.now
+  },
   service_list: {
     type: [mongoose.Schema.Types.ObjectId],
     required: true,

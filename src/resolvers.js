@@ -143,8 +143,17 @@ module.exports = {
       // Attempt to insert all the submitted Package documents and throw an error if something goes wrong
       const packages = await Package.create(docs)
 
-      // Return the new User documents to the client
+      // Return the new Package documents to the client
       return packages
+    },
+
+    // CONTACT MUTATIONS
+    bulkCreateContacts: async ( _, { docs }, { Contact } ) => {
+      // Attempt to insert all the submitted Contact documents and throw an error if something goes wrong
+      const contacts = await Contact.create(docs)
+
+      // Return the new Contact documents to the client
+      return contacts
     },
   }
 }

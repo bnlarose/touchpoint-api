@@ -39,6 +39,11 @@ module.exports = gql`
     Used to bulk add dummy data
     """
     bulkCreatePackages(docs: [PackageInput]!): [Package]
+
+    """
+    Used to bulk add dummy data
+    """
+    bulkCreateContacts(docs: [ContactInput]!): [Contact]
   }
 
   """
@@ -95,8 +100,8 @@ module.exports = gql`
     _id: ID
     first_name: String!
     last_name: String!
-    email: String
-    phone: [Phone]
+    email: String!
+    phone: [Phone]!
   }
 
   """
@@ -197,5 +202,17 @@ module.exports = gql`
     name: String!
     lob: String!
     price: Int!
+  }
+
+  input ContactInput {
+    first_name: String!
+    last_name: String!
+    email: String!
+    phone: [PhoneInput]!
+  }
+
+  input PhoneInput {
+    category: String!
+    phone_number: String!
   }
 `

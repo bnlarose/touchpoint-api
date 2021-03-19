@@ -20,7 +20,8 @@ mongoose
     {
       useCreateIndex: true,
       useUnifiedTopology: true,
-      useNewUrlParser: true
+      useNewUrlParser: true,
+      useFindAndModify: false
     }
   )
   .then(() => console.log('Connected 🚀 To MongoDB Successfully'))

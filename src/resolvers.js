@@ -48,7 +48,7 @@ module.exports = {
   Query: {
     hello: () => `This is how it begins!`,
 
-    // USER QUERIES
+    /** USER QUERIES */
 
     // Find a User with the specified userId
     getUserById: async ( _, { userId }, { User } ) => {
@@ -63,10 +63,39 @@ module.exports = {
       // Return the found user
       return user
     },
+
+    /** ACCOUNT QUERIES */
+    getAccountById: async ( _, { accountId }, { Account } ) => {
+      const account = await Account.findById( accountId )
+      .populate(
+        { path: 'service_list', model: 'Package' }
+      )
+      .populate(
+        { path: 'contacts', model: 'Contact' }
+      )
+
+      if ( !account ) throw new Error('Account not found.')
+
+      return account
+    },
+
+    getAccountByNumber: async ( _, { accNum }, { Account } ) => {
+      const account = await Account.findOne({ account_number: accNum  })
+      .populate(
+        { path: 'service_list', model: 'Package' }
+      )
+      .populate(
+        { path: 'contacts', model: 'Contact' }
+      )
+
+      if ( !account ) throw new Error('Account not found.')
+
+      return account
+    },
   },
 
   Mutation: {
-    // USER MUTATIONS
+    /** USER MUTATIONS */
 
     createUser: async ( _, args, { User } ) => {
       // Check if a User already exists with the specified username
@@ -138,7 +167,7 @@ module.exports = {
       return { token, user }
     },
 
-    // PACKAGE MUTATIONS
+    /** PACKAGE MUTATIONS */
     bulkCreatePackages: async ( _, { docs }, { Package }) => {
       // Attempt to insert all the submitted Package documents and throw an error if something goes wrong
       const packages = await Package.create(docs)
@@ -154,6 +183,15 @@ module.exports = {
 
       // Return the new Contact documents to the client
       return contacts
+    },
+
+    /** ACCOUNT MUTATIONS */
+    bulkCreateAccounts: async ( _, { docs }, { Account } ) => {
+      // Attempt to insert all the submitted Account documents and throw an error if something goes wrong
+      const accounts = await Account.create(docs)
+
+      // Return the new Account documents to the client
+      return accounts
     },
   }
 }

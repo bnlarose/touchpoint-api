@@ -4,6 +4,8 @@ module.exports = gql`
   type Query {
     hello: String!
     getUserById(userId: ID!): User
+    getAccountById(accountId: ID!): Account
+    getAccountByNumber(accNum: Int): Account
   }
 
   type Mutation {
@@ -44,6 +46,11 @@ module.exports = gql`
     Used to bulk add dummy data
     """
     bulkCreateContacts(docs: [ContactInput]!): [Contact]
+
+    """
+    Used to bulk add dummy data
+    """
+    bulkCreateAccounts(docs: [AccountInput]!): [Account]
   }
 
   """
@@ -118,10 +125,11 @@ module.exports = gql`
   Contains the details of a service account
   """
   type Account {
-    account_number: Int
+    account_number: Int!
     address: ServiceAddress
+    createdDate: String
     service_list: [Package]!
-    contacts: [Contact!]!
+    contacts: [Contact]!
   }
 
   """
@@ -162,7 +170,6 @@ module.exports = gql`
     OFFICE
   }
 
-
   """
   Types of phone contacts permitted
   """
@@ -198,12 +205,18 @@ module.exports = gql`
     reports_to: String
   }
 
+  """
+  Input mask used to hold Package instance details
+  """
   input PackageInput {
     name: String!
     lob: String!
     price: Int!
   }
 
+  """
+  Input mask used to hold Contact instance details
+  """
   input ContactInput {
     first_name: String!
     last_name: String!
@@ -211,8 +224,30 @@ module.exports = gql`
     phone: [PhoneInput]!
   }
 
+  """
+  Input mask used to hold Phone instance details
+  """
   input PhoneInput {
     category: String!
     phone_number: String!
+  }
+
+  """
+  Input mask used to hold Account instance details
+  """
+  input AccountInput {
+    account_number: Int!
+    address: ServiceAddressInput!
+    service_list: [String]!
+    contacts: [String]!
+  }
+
+  """
+  Input mask used to hold Service Address instance details
+  """
+  input ServiceAddressInput {
+    street: String!
+    city: String!
+    island: String!
   }
 `

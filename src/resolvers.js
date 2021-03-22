@@ -39,6 +39,7 @@ module.exports = {
   },
 
   LOB: {
+    CARE: 'care',
     INTERNET: 'internet',
     LANDLINE: 'landline',
     MOBILE: 'mobile',
@@ -197,7 +198,7 @@ module.exports = {
       return packages
     },
 
-    // CONTACT MUTATIONS
+    /** CONTACT MUTATIONS */
     bulkCreateContacts: async ( _, { docs }, { Contact } ) => {
       // Attempt to insert all the submitted Contact documents and throw an error if something goes wrong
       const contacts = await Contact.create(docs)
@@ -213,6 +214,15 @@ module.exports = {
 
       // Return the new Account documents to the client
       return accounts
+    },
+
+    /** CASE CATEGORY MUTATIONS  */
+    bulkCreateCaseCategories: async ( _, { docs }, { CaseCategory } ) => {
+      // Attempt to insert all the submitted CaseCategory documents and throw an error if something goes wrong
+      const caseCategories = await CaseCategory.create(docs)
+
+      // Return the new CaseCategory documents to the client
+      return caseCategories
     },
   }
 }

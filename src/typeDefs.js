@@ -51,6 +51,11 @@ module.exports = gql`
     Used to bulk add dummy data
     """
     bulkCreateAccounts(docs: [AccountInput]!): [Account]
+
+    """
+    Used to bulk add dummy data
+    """
+    bulkCreateCaseCategories(docs: [CaseCategoryInput]!): [CaseCategory]
   }
 
   """
@@ -136,6 +141,7 @@ module.exports = gql`
   Used to disposition Cases
   """
   type CaseCategory{
+    _id: ID
     name: String!
     lob: LOB!
   }
@@ -191,6 +197,7 @@ module.exports = gql`
   Line of Business designations
   """
   enum LOB {
+    CARE
     INTERNET
     LANDLINE
     MOBILE
@@ -287,5 +294,13 @@ module.exports = gql`
     street: String!
     city: String!
     island: String!
+  }
+
+  """
+  Input mask used to hold Service Address instance details
+  """
+  input CaseCategoryInput {
+    name: String!
+    lob: String!
   }
 `

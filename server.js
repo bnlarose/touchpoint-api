@@ -10,6 +10,7 @@ const User = require('./src/models/User')
 const Package = require('./src/models/Package')
 const Contact = require('./src/models/Contact')
 const Account = require('./src/models/Account')
+const CaseCategory = require('./src/models/CaseCategory')
 
 // Import helper functions
 const { getUserId } = require('./src/utils')
@@ -41,6 +42,7 @@ const server = new ApolloServer({
       Package,
       Contact,
       Account,
+      CaseCategory,
       userId: req && req.headers.authorization ? getUserId(req) : null
     }
   }

@@ -32,7 +32,34 @@ const AccountSchema = new mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Contact',
     required: true
-  }
+  },
+  cases: [{
+    title: {
+      type: String,
+      required: true
+    },
+    lob: {
+      type: String,
+      required: true
+    },
+    category: {
+      type: String,
+      required: true
+    },
+    opened: {
+      type: Date,
+      default: Date.now
+    },
+    opened_by: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    status: {
+      type: String,
+      required: true
+    }
+  }]
 })
 
 module.exports = mongoose.model('Account', AccountSchema)

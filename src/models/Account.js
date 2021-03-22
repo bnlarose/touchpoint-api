@@ -58,7 +58,30 @@ const AccountSchema = new mongoose.Schema({
     status: {
       type: String,
       required: true
-    }
+    },
+    interactions: [{
+      date: {
+        type: Date,
+        default: Date.now
+      },
+      channel: {
+        type: String,
+        required: true
+      },
+      interacted_with: {
+        type: String,
+        required: true
+      },
+      recorded_by: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+      },
+      details: {
+        type: String,
+        required: true
+      }
+    }]
   }]
 })
 

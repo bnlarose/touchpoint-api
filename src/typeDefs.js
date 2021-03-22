@@ -140,6 +140,53 @@ module.exports = gql`
     createdDate: String
     service_list: [Package]!
     contacts: [Contact]!
+    cases: [Case]
+  }
+
+  """
+  Contains the details of a Case; (essentially)
+  a call driver
+  """
+  type Case {
+    _id: ID
+    title: String!
+    lob: LOB!
+    category: CaseCategory!
+    opened: String!
+    last_updated: String!
+    opened_by: User!
+    interactions: [Interaction]
+    status: Status
+  }
+
+  """
+  Encapsulates the details of a specific
+  instance of interaction with a Customer
+  """
+  type Interaction {
+    _id: ID
+    date: String!
+    channel: ContactChannel!
+    interacted_with: String!
+    recorded_by: User!
+    details: String!
+    action_requests: [ActionRequest]
+  }
+
+  """
+  An ActionRequest is an escalation for
+  the purpose of having some activity
+  performed, for the Customer's benefit
+  """
+  type ActionRequest {
+    _id: ID
+    created: String!
+    due: String!
+    requested_by: User!
+    assigned_to: Department!
+    request_type: RequestType!
+    details: String!
+    status: Status!
   }
 
   """

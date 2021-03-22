@@ -86,6 +86,10 @@ module.exports = {
 
     /** ACCOUNT QUERIES */
     getAccountById: async ( _, { accountId }, { Account } ) => {
+      /*
+       * Search the Account collection for an instance with that ID
+       * and populate references
+      */
       const account = await Account.findById( accountId )
       .populate(
         { path: 'service_list', model: 'Package' }
@@ -94,12 +98,18 @@ module.exports = {
         { path: 'contacts', model: 'Contact' }
       )
 
+      // Throw an error if no matching account is found
       if ( !account ) throw new Error('Account not found.')
 
+      // Return the fetched Account
       return account
     },
 
     getAccountByNumber: async ( _, { accNum }, { Account } ) => {
+      /**
+       * Search the Account collection for an instance with that account number
+       * and populate references
+       */
       const account = await Account.findOne({ account_number: accNum  })
       .populate(
         { path: 'service_list', model: 'Package' }
@@ -108,9 +118,23 @@ module.exports = {
         { path: 'contacts', model: 'Contact' }
       )
 
+      // Throw an error if no Account is found
       if ( !account ) throw new Error('Account not found.')
 
+      // Return the fetched Account
       return account
+    },
+
+    /** CASE CATEGORY QUERIES */
+    getCaseCategoriesByLob: async ( _, { lob }, { CaseCategory } ) => {
+      // Find all CaseCategories of the specified lob
+      const categories = await CaseCategory.find({ lob }).sort({ name: 'asc' })
+
+      // Throw an error if no matches found
+      if ( !categories ) throw new Error('No categories found.')
+
+      // Return the fetched Categories
+      return categories
     },
   },
 

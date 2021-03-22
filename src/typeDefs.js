@@ -2,9 +2,15 @@ const { gql } = require('apollo-server')
 
 module.exports = gql`
   type Query {
+    # USER QUERIES
     getUserById(userId: ID!): User
+
+    # ACCOUNT QUERIES
     getAccountById(accountId: ID!): Account
-    getAccountByNumber(accNum: Int): Account
+    getAccountByNumber(accNum: Int!): Account
+
+    # CASE CATEGORY QUERIES
+    getCaseCategoriesByLob(lob: String!): [CaseCategory]
   }
 
   type Mutation {

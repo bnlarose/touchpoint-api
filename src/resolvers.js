@@ -68,8 +68,6 @@ module.exports = {
   },
 
   Query: {
-    hello: () => `This is how it begins!`,
-
     /** USER QUERIES */
 
     // Find a User with the specified userId

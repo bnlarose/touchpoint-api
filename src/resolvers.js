@@ -45,6 +45,27 @@ module.exports = {
     VIDEO: 'video'
   },
 
+  Status: {
+    OPEN: 'open',
+    CLOSED: 'closed',
+    ESCALATED: 'escalated'
+  },
+
+  ContactChannel: {
+    CHAT: 'chat',
+    EMAIL: 'email',
+    PHONE: 'phone',
+    SOCIAL: 'social',
+    WALKIN: 'walkin'
+  },
+
+  RequestType: {
+    CALLBACK: 'callback',
+    RESOLUTION: 'resolution',
+    MODIFICATION: 'modification',
+    INVESTIGATION: 'investigation'
+  },
+
   Query: {
     hello: () => `This is how it begins!`,
 

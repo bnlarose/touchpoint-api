@@ -133,6 +133,14 @@ module.exports = gql`
   }
 
   """
+  Used to disposition Cases
+  """
+  type CaseCategory{
+    name: String!
+    lob: LOB!
+  }
+
+  """
   Organisational departments
   """
   enum Department {
@@ -187,6 +195,36 @@ module.exports = gql`
     LANDLINE
     MOBILE
     VIDEO
+  }
+
+  """
+  Possible Case and ActionRequest statuses
+  """
+  enum Status {
+    OPEN
+    CLOSED
+    ESCALATED
+  }
+
+  """
+  Possible ommunications channel employed for interactions
+  """
+  enum ContactChannel {
+    CHAT
+    EMAIL
+    PHONE
+    SOCIAL
+    WALKIN
+  }
+
+  """
+  Possible activities facilitated by ActionRequests
+  """
+  enum RequestType {
+    CALLBACK
+    RESOLUTION
+    MODIFICATION
+    INVESTIGATION
   }
 
   """

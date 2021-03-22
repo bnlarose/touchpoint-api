@@ -80,7 +80,38 @@ const AccountSchema = new mongoose.Schema({
       details: {
         type: String,
         required: true
-      }
+      },
+      action_requests: [{
+        created: {
+          type: Date,
+          default: Date.now
+        },
+        due: {
+          type: Date,
+          required: true
+        },
+        requested_by: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+          required: true
+        },
+        assigned_to: {
+          type: String,
+          required: true
+        },
+        request_type: {
+          type: String,
+          required: true
+        },
+        details: {
+          type: String,
+          required: true
+        },
+        status: {
+          type: String,
+          required: true
+        }
+      }]
     }]
   }]
 })

@@ -135,6 +135,7 @@ module.exports = gql`
   Contains the details of a service account
   """
   type Account {
+    _id: ID
     account_number: Int!
     address: ServiceAddress
     createdDate: String

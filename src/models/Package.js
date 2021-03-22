@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Double = require('@mongoosejs/double')
 
 const PackageSchema = new mongoose.Schema({
   name: {
@@ -10,7 +11,7 @@ const PackageSchema = new mongoose.Schema({
     required: true
   },
   price: {
-    type: Number,
+    type: Double,
     required: true
   }
 })

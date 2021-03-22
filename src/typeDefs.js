@@ -128,7 +128,7 @@ module.exports = gql`
     _id: ID
     name: String!
     lob: LOB!
-    price: Int!
+    price: Float!
   }
 
   """
@@ -309,7 +309,7 @@ module.exports = gql`
   input PackageInput {
     name: String!
     lob: String!
-    price: Int!
+    price: Float!
   }
 
   """

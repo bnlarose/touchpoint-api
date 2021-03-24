@@ -145,8 +145,7 @@ module.exports = gql`
   }
 
   """
-  Contains the details of a Case; (essentially)
-  a call driver
+  Contains the details of a Case; (essentially) a call driver
   """
   type Case {
     _id: ID
@@ -161,8 +160,8 @@ module.exports = gql`
   }
 
   """
-  Encapsulates the details of a specific
-  instance of interaction with a Customer
+  Encapsulates the details of a specific instance of
+  interaction with a Customer
   """
   type Interaction {
     _id: ID
@@ -175,9 +174,8 @@ module.exports = gql`
   }
 
   """
-  An ActionRequest is an escalation for
-  the purpose of having some activity
-  performed, for the Customer's benefit
+  An ActionRequest is an escalation for the purpose of
+  having some activity performed, for the Customer's benefit
   """
   type ActionRequest {
     _id: ID
@@ -288,8 +286,7 @@ module.exports = gql`
   }
 
   """
-  Encapsulates all non-hierarchical data
-  elements required to create a user
+  Encapsulates all non-hierarchical data elements required to create a user
   """
   input UserInput {
     first_name: String!

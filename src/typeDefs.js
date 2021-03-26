@@ -335,6 +335,7 @@ module.exports = gql`
   input AccountInput {
     account_number: Int!
     address: ServiceAddressInput!
+    createdDate: String
     service_list: [String]!
     contacts: [String]!
   }

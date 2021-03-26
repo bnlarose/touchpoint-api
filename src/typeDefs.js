@@ -149,6 +149,7 @@ module.exports = gql`
   """
   type Case {
     _id: ID
+    case_number: Int
     title: String!
     lob: LOB!
     category: CaseCategory!
@@ -183,6 +184,7 @@ module.exports = gql`
     due: String!
     requested_by: User!
     assigned_to: Department!
+    claimed_by: User
     request_type: RequestType!
     details: String!
     status: Status!

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const AutoIncrement = require('mongoose-sequence')(mongoose)
 
 const AccountSchema = new mongoose.Schema({
   account_number: {
@@ -34,6 +35,9 @@ const AccountSchema = new mongoose.Schema({
     required: true
   },
   cases: [{
+    case_number: {
+      type: Number
+    },
     title: {
       type: String,
       required: true
@@ -99,6 +103,10 @@ const AccountSchema = new mongoose.Schema({
           type: String,
           required: true
         },
+        claimed_by: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User'
+        },
         request_type: {
           type: String,
           required: true
@@ -115,5 +123,7 @@ const AccountSchema = new mongoose.Schema({
     }]
   }]
 })
+
+AccountSchema.plugin(AutoIncrement, { id: 'case_number_seq', inc_field: 'cases.case_number' })
 
 module.exports = mongoose.model('Account', AccountSchema)

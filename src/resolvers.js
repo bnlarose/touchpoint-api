@@ -1,6 +1,17 @@
+const { AuthenticationError } = require('apollo-server-errors')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv').config({ path: __dirname + '../.env' })
+
+/**
+ * Used to ensure that the user requesting this action is authorized
+ * @param {ID} userId
+ */
+const checkAuth = (userId) => {
+  if (!userId) {
+    throw new AuthenticationError('Please login to perform this action')
+  }
+}
 
 module.exports = {
   Site: {
@@ -71,9 +82,11 @@ module.exports = {
     /** USER QUERIES */
 
     // Find a User with the specified userId
-    getUserById: async ( _, { userId }, { User } ) => {
+    getUserById: async ( _, { targetUserId }, { User, userId } ) => {
+      checkAuth(userId)
+
       // Search the User collection for an instance with that ID
-      const user = await User.findById( userId ).populate('reports_to')
+      const user = await User.findById( targetUserId ).populate('reports_to')
 
       // Throw an error if no matching User is found
       if ( !user ) {
@@ -85,11 +98,13 @@ module.exports = {
     },
 
     /** ACCOUNT QUERIES */
-    getAccountById: async ( _, { accountId }, { Account } ) => {
+    getAccountById: async ( _, { accountId }, { Account, userId  } ) => {
       /*
        * Search the Account collection for an instance with that ID
        * and populate references
       */
+      checkAuth(userId)
+
       const account = await Account.findById( accountId )
       .populate(
         { path: 'service_list', model: 'Package' }
@@ -105,11 +120,13 @@ module.exports = {
       return account
     },
 
-    getAccountByNumber: async ( _, { accNum }, { Account } ) => {
+    getAccountByNumber: async ( _, { accNum }, { Account, userId } ) => {
       /**
        * Search the Account collection for an instance with that account number
        * and populate references
        */
+      checkAuth(userId)
+
       const account = await Account.findOne({ account_number: accNum  })
       .populate(
         { path: 'service_list', model: 'Package' }
@@ -126,7 +143,9 @@ module.exports = {
     },
 
     /** CASE CATEGORY QUERIES */
-    getCaseCategoriesByLob: async ( _, { lob }, { CaseCategory } ) => {
+    getCaseCategoriesByLob: async ( _, { lob }, { CaseCategory, userId  } ) => {
+      checkAuth(userId)
+
       // Find all CaseCategories of the specified lob
       const categories = await CaseCategory.find({ lob }).sort({ name: 'asc' })
 
@@ -141,7 +160,9 @@ module.exports = {
   Mutation: {
     /** USER MUTATIONS */
 
-    createUser: async ( _, args, { User } ) => {
+    createUser: async ( _, args, { User, userId  } ) => {
+      checkAuth(userId)
+
       // Check if a User already exists with the specified username
       const user = await User.findOne({ username: args.username })
 
@@ -179,7 +200,9 @@ module.exports = {
       return newUser
     },
 
-    bulkCreateUser: async ( _, { docs }, { User } ) => {
+    bulkCreateUser: async ( _, { docs }, { User, userId  } ) => {
+      checkAuth(userId)
+
       // Attempt to insert all the submitted User documents and throw an error if something goes wrong
       const users = await User.create(docs)
 
@@ -212,7 +235,9 @@ module.exports = {
     },
 
     /** PACKAGE MUTATIONS */
-    bulkCreatePackages: async ( _, { docs }, { Package }) => {
+    bulkCreatePackages: async ( _, { docs }, { Package, userId  }) => {
+      checkAuth(userId)
+
       // Attempt to insert all the submitted Package documents and throw an error if something goes wrong
       const packages = await Package.create(docs)
 
@@ -221,7 +246,9 @@ module.exports = {
     },
 
     /** CONTACT MUTATIONS */
-    bulkCreateContacts: async ( _, { docs }, { Contact } ) => {
+    bulkCreateContacts: async ( _, { docs }, { Contact, userId  } ) => {
+      checkAuth(userId)
+
       // Attempt to insert all the submitted Contact documents and throw an error if something goes wrong
       const contacts = await Contact.create(docs)
 
@@ -230,7 +257,9 @@ module.exports = {
     },
 
     /** ACCOUNT MUTATIONS */
-    bulkCreateAccounts: async ( _, { docs }, { Account } ) => {
+    bulkCreateAccounts: async ( _, { docs }, { Account, userId  } ) => {
+      checkAuth(userId)
+
       // Attempt to insert all the submitted Account documents and throw an error if something goes wrong
       const accounts = await Account.create(docs)
 
@@ -239,7 +268,9 @@ module.exports = {
     },
 
     /** CASE CATEGORY MUTATIONS  */
-    bulkCreateCaseCategories: async ( _, { docs }, { CaseCategory } ) => {
+    bulkCreateCaseCategories: async ( _, { docs }, { CaseCategory, userId  } ) => {
+      checkAuth(userId)
+
       // Attempt to insert all the submitted CaseCategory documents and throw an error if something goes wrong
       const caseCategories = await CaseCategory.create(docs)
 

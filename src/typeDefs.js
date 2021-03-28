@@ -3,7 +3,7 @@ const { gql } = require('apollo-server')
 module.exports = gql`
   type Query {
     # USER QUERIES
-    getUserById(userId: ID!): User
+    getUserById(targetUserId: ID!): User
 
     # ACCOUNT QUERIES
     getAccountById(accountId: ID!): Account

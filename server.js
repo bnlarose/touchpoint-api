@@ -33,6 +33,10 @@ const typeDefs = require('./src/typeDefs')
 const resolvers = require('./src/resolvers')
 
 const server = new ApolloServer({
+  cors: {
+    origin: '*',
+    credentials: true
+  },
   typeDefs,
   resolvers,
   context: ({ req }) => {

@@ -34,7 +34,7 @@ const resolvers = require('./src/resolvers')
 
 const server = new ApolloServer({
   cors: {
-    origin: '*',
+    origin: true,
     credentials: true
   },
   typeDefs,

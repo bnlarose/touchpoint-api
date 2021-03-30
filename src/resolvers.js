@@ -197,6 +197,24 @@ module.exports = {
       return account
     },
 
+    getAccountsByContact: async ( _, { contactId }, { Account, userId } ) => {
+      /**
+       * Get all the Accounts that have the provided contact as one of their contacts
+       */
+
+      // Check if the user making the request is authorized
+      checkAuth(userId)
+
+      // Search for the Contact and only populate the Contacts array
+      const accounts = Account.find({ contacts: contactId })
+      .populate(
+        { path: 'contacts', model: 'Contact' }
+      )
+
+      // Return the found account list, even if empty
+      return accounts
+    },
+
     /** CASE CATEGORY QUERIES */
     getCaseCategoriesByLob: async ( _, { lob }, { CaseCategory, userId  } ) => {
       checkAuth(userId)

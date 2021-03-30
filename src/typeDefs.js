@@ -5,6 +5,10 @@ module.exports = gql`
     # USER QUERIES
     getUserById(targetUserId: ID!): User
 
+    # CONTACT QUERIES
+    getContactById(contactId: ID!): Contact
+    getContactByTerm(searchTerm: String): [Contact]
+
     # ACCOUNT QUERIES
     getAccountById(accountId: ID!): Account
     getAccountByNumber(accNum: Int!): Account

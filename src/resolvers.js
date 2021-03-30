@@ -97,6 +97,61 @@ module.exports = {
       return user
     },
 
+    /** CONTACT QUERIES */
+    getContactById: async ( _, { contactId }, { Contact, userId } ) => {
+      /**
+       * Search the Contact collection for an instance with the specified id
+       */
+
+      // Check if the user making the request is authorized
+      checkAuth(userId)
+
+      // Search for the Contact
+      const contact = await Contact.findById( contactId )
+
+      // Throw an error if no matching contact was found
+      if (!contact) throw new Error('Contact not found.')
+
+      // Return the fetched Contact
+      return contact
+    },
+
+    getContactByTerm: async ( _, { searchTerm }, { Contact, userId } ) => {
+      /**
+       * Search the Contact collection for instances that contain the search term in the first_name, last_name, or email_address fields
+       */
+
+      // Check if the user making the request is authorized
+      checkAuth(userId)
+
+      const searchResults = await Contact.find(
+        // Perform the text search
+        {
+          $text: {
+            $search: searchTerm
+          }
+        },
+        // Assign a text score to order matches
+        {
+          score: {
+            $meta: 'textScore'
+          }
+        }
+        // Sort by that textScore, then last name, then first name
+      ).sort({
+        score: {
+          $meta: 'textScore'
+        },
+        last_name: 'desc',
+        first_name: 'desc'
+      })
+      // Limit query to max 5 results
+      .limit(5)
+
+      // Return the search results
+      return searchResults
+    },
+
     /** ACCOUNT QUERIES */
     getAccountById: async ( _, { accountId }, { Account, userId  } ) => {
       /*

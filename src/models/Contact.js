@@ -30,4 +30,9 @@ const ContactSchema = mongoose.Schema({
   ]
 })
 
+// Create index to enable text search
+ContactSchema.index({
+  '$**': 'text'
+})
+
 module.exports = mongoose.model('Contact', ContactSchema)

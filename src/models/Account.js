@@ -47,12 +47,16 @@ const AccountSchema = new mongoose.Schema({
       required: true
     },
     category: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'CaseCategory',
       required: true
     },
     opened: {
       type: Date,
       default: Date.now
+    },
+    last_updated: {
+      type: Date
     },
     opened_by: {
       type: mongoose.Schema.Types.ObjectId,

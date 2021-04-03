@@ -28,6 +28,7 @@ module.exports = {
   Department: {
     CARE: 'care',
     DEV: 'development',
+    DISPATCH: 'dispatch',
     ESCALATIONS: 'escalations',
     HELPDESK: 'helpdesk',
     RETAIL: 'retail',
@@ -37,6 +38,7 @@ module.exports = {
   Position: {
     CSR: 'csr',
     DEV: 'developer',
+    DISPATCHER: 'dispatcher',
     ESCALATIONS: 'escalations',
     HELPDESK: 'helpdesk',
     MANAGER: 'manager',
@@ -188,6 +190,27 @@ module.exports = {
       )
       .populate(
         { path: 'contacts', model: 'Contact' }
+      )
+      .populate(
+        { path: 'cases.category', model: 'CaseCategory' }
+      )
+      .populate(
+        { path: 'cases.opened_by', model: 'User' }
+      )
+      .populate(
+        { path: 'cases.interactions.recorded_by', model: 'User' }
+      )
+      .populate(
+        {
+          path: 'cases.interactions.action_requests.requested_by',
+          model: 'User'
+        }
+      )
+      .populate(
+        {
+          path: 'cases.interactions.action_requests.claimed_by',
+          model: 'User'
+        }
       )
 
       // Throw an error if no Account is found
@@ -343,7 +366,7 @@ module.exports = {
     /** CASE MUTATIONS */
     createCase: async ( _, { account_number, doc }, { Account, userId } ) => {
       checkAuth(userId)
-      let caseResult
+      let updatedAccount
 
       const searchCase = await Account.findOne({
         account_number,
@@ -351,7 +374,7 @@ module.exports = {
       })
 
       if (searchCase) {
-        caseResult = searchCase.cases.filter(entry => entry.title === doc.title)[0]
+        updatedAccount = searchCase
       } else {
         const account = await Account.findOneAndUpdate(
           // Find by Account Number
@@ -368,10 +391,38 @@ module.exports = {
           { new: true }
         )
 
-        caseResult = account.cases.filter(entry => entry.title === doc.title)[0]
+        updatedAccount = account
       }
 
-      return caseResult
+      return updatedAccount
+    },
+
+    /** INTERACTION MUTATIONS */
+    createInteraction: async ( _, { caseId, doc }, { Account, userId }) => {
+      checkAuth(userId)
+
+      // Add the Interaction using these details
+      const updatedAccount = await Account.findOneAndUpdate(
+        // Find the case again
+        { "cases._id": caseId },
+        // Insert the Interaction details into the right Case
+        {
+          $addToSet: {
+            "cases.$[i].interactions": doc
+          }
+        },
+        // Capture the updated document
+        {
+          arrayFilters: [
+            {
+              "i._id": caseId
+            }
+          ],
+          new: true
+        }
+      )
+
+      return updatedAccount
     },
 
     /** CASE CATEGORY MUTATIONS  */

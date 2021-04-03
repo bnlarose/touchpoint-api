@@ -42,8 +42,15 @@ module.exports = gql`
       password: String!
     ): AuthPayload
 
-    createCase(account_number: Int!, doc: CaseInput!): Case
+    """
+    Creates a new Case using the details supplied on the specified account
+    """
+    createCase(account_number: Int!, doc: CaseInput!): Account
 
+    """
+    Creates a new Interaction using the details supplied on the specified Case
+    """
+    createInteraction(caseId: ID!, doc: InteractionInput!): Account
     # BULK MUTATIONS
     """
     Used to bulk add dummy data
@@ -177,6 +184,7 @@ module.exports = gql`
     date: String!
     channel: ContactChannel!
     interacted_with: String!
+    contact: String!
     recorded_by: User!
     details: String!
     action_requests: [ActionRequest]
@@ -213,6 +221,7 @@ module.exports = gql`
   enum Department {
     CARE
     DEV
+    DISPATCH
     ESCALATIONS
     HELPDESK
     RETAIL
@@ -225,6 +234,7 @@ module.exports = gql`
   enum Position {
     CSR
     DEV
+    DISPATCHER
     ESCALATIONS
     HELPDESK
     MANAGER
@@ -365,6 +375,9 @@ module.exports = gql`
     lob: String!
   }
 
+  """
+  Input mask used to hold Case instance details
+  """
   input CaseInput {
     title: String!
     lob: String!
@@ -373,5 +386,17 @@ module.exports = gql`
     last_updated: String
     opened_by: String
     status: String
+  }
+
+  """
+  Input mask used to hold Interaction instance details
+  """
+  input InteractionInput {
+    date: String!
+    channel: String!
+    interacted_with: String!
+    contact: String!
+    recorded_by: String!
+    details: String!
   }
 `

@@ -35,17 +35,20 @@ module.exports = gql`
     ): User
 
     """
-    Used to bulk add dummy data
-    """
-    bulkCreateUser(docs: [UserInput!]!):[User]
-
-    """
     Allows a user to authenticate against stored user credentials
     """
     loginUser(
       username: String!,
       password: String!
     ): AuthPayload
+
+    createCase(account_number: Int!, doc: CaseInput!): Case
+
+    # BULK MUTATIONS
+    """
+    Used to bulk add dummy data
+    """
+    bulkCreateUser(docs: [UserInput!]!):[User]
 
     """
     Used to bulk add dummy data
@@ -360,5 +363,15 @@ module.exports = gql`
   input CaseCategoryInput {
     name: String!
     lob: String!
+  }
+
+  input CaseInput {
+    title: String!
+    lob: String!
+    category: String
+    opened: String
+    last_updated: String
+    opened_by: String
+    status: String
   }
 `

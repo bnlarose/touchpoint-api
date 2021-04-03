@@ -340,6 +340,40 @@ module.exports = {
       return accounts
     },
 
+    /** CASE MUTATIONS */
+    createCase: async ( _, { account_number, doc }, { Account, userId } ) => {
+      checkAuth(userId)
+      let caseResult
+
+      const searchCase = await Account.findOne({
+        account_number,
+        "cases.title": doc.title
+      })
+
+      if (searchCase) {
+        caseResult = searchCase.cases.filter(entry => entry.title === doc.title)[0]
+      } else {
+        const account = await Account.findOneAndUpdate(
+          // Find by Account Number
+          { account_number },
+          /**
+           * Create a case with the supplied name if it doesn't already exist. * Nothing actually happens if it already exists
+          */
+          {
+            $addToSet: {
+              cases: doc
+            }
+          },
+          // Capture the updated document
+          { new: true }
+        )
+
+        caseResult = account.cases.filter(entry => entry.title === doc.title)[0]
+      }
+
+      return caseResult
+    },
+
     /** CASE CATEGORY MUTATIONS  */
     bulkCreateCaseCategories: async ( _, { docs }, { CaseCategory, userId  } ) => {
       checkAuth(userId)

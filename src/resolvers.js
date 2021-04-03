@@ -425,6 +425,34 @@ module.exports = {
       return updatedAccount
     },
 
+    /** ACTIONREQUEST MUTATIONS */
+    createActionRequest: async ( _, { interactionId, doc }, { Account, userId } ) => {
+      checkAuth(userId)
+
+      const updatedAccount = await Account.findOneAndUpdate(
+        // Find the revelant Interaction
+        { "cases.interactions._id": interactionId },
+        // Add the AR to the right Interaction
+        {
+          $addToSet: {
+            "cases.$[].interactions.$[i].action_requests": doc
+          }
+
+        },
+        // Apply ArrayFilter and capture updated document
+        {
+          arrayFilters: [
+            {
+              "i._id": interactionId
+            }
+          ],
+          new: true
+        }
+      )
+
+      return updatedAccount
+    },
+
     /** CASE CATEGORY MUTATIONS  */
     bulkCreateCaseCategories: async ( _, { docs }, { CaseCategory, userId  } ) => {
       checkAuth(userId)

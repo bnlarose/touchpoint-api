@@ -51,6 +51,8 @@ module.exports = gql`
     Creates a new Interaction using the details supplied on the specified Case
     """
     createInteraction(caseId: ID!, doc: InteractionInput!): Account
+
+    createActionRequest(interactionId: ID!, doc: ActionRequestInput): Account
     # BULK MUTATIONS
     """
     Used to bulk add dummy data
@@ -398,5 +400,19 @@ module.exports = gql`
     contact: String!
     recorded_by: String!
     details: String!
+  }
+
+  """
+  Input mask used to hold ActionRequest instance details
+  """
+  input ActionRequestInput {
+    created: String!
+    due: String!
+    requested_by: String!
+    assigned_to: String!
+    claimed_by: String
+    request_type: String!
+    details: String!
+    status: String!
   }
 `

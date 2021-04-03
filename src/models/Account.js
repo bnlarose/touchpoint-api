@@ -80,6 +80,10 @@ const AccountSchema = new mongoose.Schema({
         type: String,
         required: true
       },
+      contact: {
+        type: String,
+        required: true
+      },
       recorded_by: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

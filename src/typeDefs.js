@@ -383,10 +383,10 @@ module.exports = gql`
   input CaseInput {
     title: String!
     lob: String!
-    category: String
+    category: String!
     opened: String
     last_updated: String
-    opened_by: String
+    opened_by: String!
     status: String
   }
 

@@ -170,8 +170,8 @@ module.exports = gql`
     title: String!
     lob: LOB!
     category: CaseCategory!
-    opened: String!
-    last_updated: String!
+    opened: String
+    last_updated: String
     opened_by: User!
     interactions: [Interaction]
     status: Status

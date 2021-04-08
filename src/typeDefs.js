@@ -13,6 +13,9 @@ module.exports = gql`
     getAccountById(accountId: ID!): Account
     getAccountByNumber(accNum: Int!): Account
     getAccountsByContact(contactId: ID!): [Account]
+    getAccountByCaseId(caseId: ID!): Account
+    getAccountByInteractionId(interactionId: ID!): Account
+    getAccountByARId(ARId: ID!): Account
 
     # CASE CATEGORY QUERIES
     getCaseCategoriesByLob(lob: String!): [CaseCategory]

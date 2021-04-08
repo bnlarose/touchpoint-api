@@ -178,11 +178,12 @@ module.exports = {
     },
 
     getAccountByNumber: async ( _, { accNum }, { Account, userId } ) => {
+      checkAuth(userId)
+
       /**
        * Search the Account collection for an instance with that account number
        * and populate references
        */
-      checkAuth(userId)
 
       const account = await Account.findOne({ account_number: accNum  })
       .populate(
@@ -236,6 +237,90 @@ module.exports = {
 
       // Return the found account list, even if empty
       return accounts
+    },
+
+    getAccountByCaseId: async ( _, { caseId }, { Account, userId } ) => {
+      // Check if the user making the request is authorized
+      checkAuth(userId)
+
+      // Search for the account that has this specific Case
+      const account = await Account.findOne({ "cases._id": caseId })
+      .populate(
+        { path: 'cases.category', model: 'CaseCategory' }
+      )
+      .populate(
+        { path: 'cases.opened_by', model: 'User' }
+      )
+      .populate(
+        { path: 'cases.interactions.recorded_by', model: 'User' }
+      )
+      .populate(
+        {
+          path: 'cases.interactions.action_requests.requested_by',
+          model: 'User'
+        }
+      )
+      .populate(
+        {
+          path: 'cases.interactions.action_requests.claimed_by',
+          model: 'User'
+        }
+      )
+
+      // Throw an error if no Account is found
+      if ( !account ) throw new Error('Account not found.')
+
+      // Return the fetched Account
+      return account
+    },
+
+    getAccountByInteractionId: async ( _, { interactionId }, { Account, userId } ) => {
+      // Check if the user making the request is authorized
+      checkAuth(userId)
+
+      // Search for the Account that contains this specific Interaction
+      const account = await Account.findOne({ "cases.interactions._id": interactionId })
+      .populate(
+        { path: 'cases.category', model: 'CaseCategory' }
+      )
+      .populate(
+        { path: 'cases.opened_by', model: 'User' }
+      )
+      .populate(
+        { path: 'cases.interactions.recorded_by', model: 'User' }
+      )
+      .populate(
+        {
+          path: 'cases.interactions.action_requests.requested_by',
+          model: 'User'
+        }
+      )
+      .populate(
+        {
+          path: 'cases.interactions.action_requests.claimed_by',
+          model: 'User'
+        }
+      )
+
+      // Throw an error if no Account is found
+      if ( !account ) throw new Error('Account not found.')
+
+      // Return the fetched Account
+      return account
+    },
+
+    getAccountByARId: async ( _, { ARId }, { Account, userId } ) => {
+      // Check if the user making the request is authorized
+      checkAuth(userId)
+
+      // Search for the Account that contains this specific AR
+      const account = await Account.findOne({ "cases.interactions.action_requests._id": ARId })
+
+      // Throw an error if no Account is found
+      if ( !account ) throw new Error('Account not found.')
+
+      // Return the fetched Account
+      return account
     },
 
     /** CASE CATEGORY QUERIES */

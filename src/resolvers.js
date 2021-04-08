@@ -315,6 +315,27 @@ module.exports = {
 
       // Search for the Account that contains this specific AR
       const account = await Account.findOne({ "cases.interactions.action_requests._id": ARId })
+      .populate(
+        { path: 'cases.category', model: 'CaseCategory' }
+      )
+      .populate(
+        { path: 'cases.opened_by', model: 'User' }
+      )
+      .populate(
+        { path: 'cases.interactions.recorded_by', model: 'User' }
+      )
+      .populate(
+        {
+          path: 'cases.interactions.action_requests.requested_by',
+          model: 'User'
+        }
+      )
+      .populate(
+        {
+          path: 'cases.interactions.action_requests.claimed_by',
+          model: 'User'
+        }
+      )
 
       // Throw an error if no Account is found
       if ( !account ) throw new Error('Account not found.')

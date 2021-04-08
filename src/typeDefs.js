@@ -51,6 +51,11 @@ module.exports = gql`
     createCase(account_number: Int!, doc: CaseInput!): Account
 
     """
+    Delete the specifed Case from its parent Account
+    """
+    deleteCase(account_number: Int!, caseId: ID!): Account
+
+    """
     Creates a new Interaction using the details supplied on the specified Case
     """
     createInteraction(caseId: ID!, doc: InteractionInput!): Account

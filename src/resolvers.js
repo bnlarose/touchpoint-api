@@ -503,6 +503,53 @@ module.exports = {
       return updatedAccount
     },
 
+    deleteCase: async ( _, { account_number, caseId }, { Account, userId } ) => {
+      checkAuth(userId)
+
+      const updatedAccount = await Account.findOneAndUpdate(
+        // Find the relevant Account
+        { account_number },
+        // Remove the specified Case from the cases array
+        {
+          $pull: {
+            cases: { _id: caseId }
+          }
+        },
+        // Specify the return of the updated document
+        { new: true }
+      )
+      .populate(
+        { path: 'service_list', model: 'Package' }
+      )
+      .populate(
+        { path: 'contacts', model: 'Contact' }
+      )
+      .populate(
+        { path: 'cases.category', model: 'CaseCategory' }
+      )
+      .populate(
+        { path: 'cases.opened_by', model: 'User' }
+      )
+      .populate(
+        { path: 'cases.interactions.recorded_by', model: 'User' }
+      )
+      .populate(
+        {
+          path: 'cases.interactions.action_requests.requested_by',
+          model: 'User'
+        }
+      )
+      .populate(
+        {
+          path: 'cases.interactions.action_requests.claimed_by',
+          model: 'User'
+        }
+      )
+
+      // Return the updated Account
+      return updatedAccount
+    },
+
     /** INTERACTION MUTATIONS */
     createInteraction: async ( _, { caseId, doc }, { Account, userId }) => {
       checkAuth(userId)

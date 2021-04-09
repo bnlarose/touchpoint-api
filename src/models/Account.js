@@ -126,7 +126,8 @@ const AccountSchema = new mongoose.Schema({
         },
         status: {
           type: String,
-          required: true
+          required: true,
+          default: "escalated"
         }
       }]
     }]

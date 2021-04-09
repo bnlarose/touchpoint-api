@@ -213,7 +213,7 @@ module.exports = gql`
     claimed_by: User
     request_type: RequestType!
     details: String!
-    status: Status!
+    status: Status
   }
 
   """
@@ -421,6 +421,6 @@ module.exports = gql`
     claimed_by: String
     request_type: String!
     details: String!
-    status: String!
+    status: String
   }
 `

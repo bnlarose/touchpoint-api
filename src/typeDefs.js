@@ -289,9 +289,10 @@ module.exports = gql`
   Possible Case and ActionRequest statuses
   """
   enum Status {
-    OPEN
     CLOSED
     ESCALATED
+    OPEN
+    RESOLVING
   }
 
   """

@@ -60,9 +60,10 @@ module.exports = {
   },
 
   Status: {
-    OPEN: 'open',
     CLOSED: 'closed',
-    ESCALATED: 'escalated'
+    ESCALATED: 'escalated',
+    OPEN: 'open',
+    RESOLVING: 'resolving'
   },
 
   ContactChannel: {

@@ -607,6 +607,62 @@ module.exports = {
       return updatedAccount
     },
 
+    changeARStatus: async ( _, { arId, status }, { Account, userId } ) => {
+      // Check auth status
+      checkAuth(userId)
+
+      // Locate the parent Account and update the AR status
+      const account = await Account.findOneAndUpdate(
+        // Find the Account by the AR id
+        { "cases.interactions.action_requests._id": arId },
+        // Update the AR status
+        {
+          $set: {
+            "cases.$[].interactions.$[].action_requests.$[i].status": status
+          }
+        },
+        // Apply ArrayFilter and specify updated document return
+        {
+          arrayFilters: [
+            {
+              "i._id": arId
+            }
+          ],
+          new: true
+        }
+      )
+
+      return account
+    },
+
+    claimAR: async ( _, { arId }, { Account, userId } ) => {
+      // Check auth status
+      checkAuth(userId)
+
+      // Locate the parent Account and update the claimed_by field
+      const account = await Account.findOneAndUpdate(
+        // Find the Account by the AR id
+        { "cases.interactions.action_requests._id": arId },
+        // Update the AR claimed_by property
+        {
+          $set: {
+            "cases.$[].interactions.$[].action_requests.$[i].claimed_by": userId
+          }
+        },
+        // Apply ArrayFilter and specify updated document return
+        {
+          arrayFilters: [
+            {
+              "i._id": arId
+            }
+          ],
+          new: true
+        }
+      )
+
+      return account
+    },
+
     /** CASE CATEGORY MUTATIONS  */
     bulkCreateCaseCategories: async ( _, { docs }, { CaseCategory, userId  } ) => {
       checkAuth(userId)

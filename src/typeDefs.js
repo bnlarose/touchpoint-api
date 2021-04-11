@@ -60,7 +60,21 @@ module.exports = gql`
     """
     createInteraction(caseId: ID!, doc: InteractionInput!): Account
 
+    """
+    Creates a new AR using the details supplied
+    """
     createActionRequest(interactionId: ID!, doc: ActionRequestInput): Account
+
+    """
+    Change the state of the specified AR to the provided state
+    """
+    changeARStatus(arId: ID!, status: String!): Account
+
+    """
+    Set the claimed_by property to the User executing the request
+    """
+    claimAR(arId:ID!): Account
+
     # BULK MUTATIONS
     """
     Used to bulk add dummy data

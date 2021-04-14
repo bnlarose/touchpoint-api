@@ -22,6 +22,7 @@ module.exports = gql`
 
     # ACTION REQUEST QUERIES
     getDeptARs(dept: String!): [AssignedEscalation]
+    getUserClaimedARs(claimerId: ID!): [AssignedEscalation]
   }
 
   type Mutation {
@@ -243,7 +244,7 @@ module.exports = gql`
   }
 
   type AssignedEscalation{
-    account_number: Int!
+    caseId: ID!
     ar: ActionRequest!
   }
 

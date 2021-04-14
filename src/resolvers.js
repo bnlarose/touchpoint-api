@@ -1,6 +1,7 @@
 const { AuthenticationError } = require('apollo-server-errors')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const mongoose = require('mongoose')
 require('dotenv').config({ path: __dirname + '../.env' })
 
 /**
@@ -399,7 +400,49 @@ module.exports = {
       )
 
       return deptARs
-    }
+    },
+
+    getUserClaimedARs: async ( _, { claimerId }, { Account, userId } ) => {
+      // Check if the user making the request is authorized
+      checkAuth(userId)
+
+      const filter = {
+        'cases.interactions.action_requests.claimed_by': mongoose.Types.ObjectId(claimerId)
+      }
+
+      const userARs = await Account.aggregate(
+        [
+          {
+            '$match': filter
+          }, {
+            '$unwind': {
+              'path': '$cases',
+              'preserveNullAndEmptyArrays': false
+            }
+          }, {
+            '$unwind': {
+              'path': '$cases.interactions',
+              'preserveNullAndEmptyArrays': false
+            }
+          }, {
+            '$unwind': {
+              'path': '$cases.interactions.action_requests',
+              'preserveNullAndEmptyArrays': false
+            }
+          }, {
+            '$match': filter
+          }, {
+            '$project': {
+              _id: 0,
+              'caseId': '$cases._id',
+              'ar': '$cases.interactions.action_requests'
+            }
+          }
+        ]
+      )
+
+      return userARs
+    },
   },
 
   Mutation: {

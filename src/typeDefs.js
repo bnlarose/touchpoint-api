@@ -19,6 +19,9 @@ module.exports = gql`
 
     # CASE CATEGORY QUERIES
     getCaseCategoriesByLob(lob: String!): [CaseCategory]
+
+    # ACTION REQUEST QUERIES
+    getDeptARs(dept: String!): [AssignedEscalation]
   }
 
   type Mutation {
@@ -237,6 +240,12 @@ module.exports = gql`
     _id: ID
     name: String!
     lob: LOB!
+  }
+
+  type AssignedEscalation{
+    _id: ID
+    account_number: Int!
+    ar: ActionRequest!
   }
 
   """

@@ -347,6 +347,7 @@ module.exports = {
 
     /** CASE CATEGORY QUERIES */
     getCaseCategoriesByLob: async ( _, { lob }, { CaseCategory, userId  } ) => {
+      // Check if the user making the request is authorized
       checkAuth(userId)
 
       // Find all CaseCategories of the specified lob
@@ -358,6 +359,47 @@ module.exports = {
       // Return the fetched Categories
       return categories
     },
+
+    getDeptARs: async ( _, { dept }, { Account, userId } ) => {
+      // Check if the user making the request is authorized
+      checkAuth(userId)
+
+      const filter = {
+        'cases.interactions.action_requests.assigned_to': dept
+      }
+
+      const deptARs = await Account.aggregate(
+        [
+          {
+            '$match': filter
+          }, {
+            '$unwind': {
+              'path': '$cases',
+              'preserveNullAndEmptyArrays': false
+            }
+          }, {
+            '$unwind': {
+              'path': '$cases.interactions',
+              'preserveNullAndEmptyArrays': false
+            }
+          }, {
+            '$unwind': {
+              'path': '$cases.interactions.action_requests',
+              'preserveNullAndEmptyArrays': false
+            }
+          }, {
+            '$match': filter
+          }, {
+            '$project': {
+              'account_number': 1,
+              'ar': '$cases.interactions.action_requests'
+            }
+          }
+        ]
+      )
+
+      return deptARs
+    }
   },
 
   Mutation: {

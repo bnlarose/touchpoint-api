@@ -243,7 +243,6 @@ module.exports = gql`
   }
 
   type AssignedEscalation{
-    _id: ID
     account_number: Int!
     ar: ActionRequest!
   }

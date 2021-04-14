@@ -392,7 +392,8 @@ module.exports = {
             '$match': filter
           }, {
             '$project': {
-              'account_number': 1,
+              _id: 0,
+              'caseId': '$cases._id',
               'ar': '$cases.interactions.action_requests'
             }
           }

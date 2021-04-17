@@ -1,5 +1,6 @@
 // Import ApolloServer constructor
-const { ApolloServer } = require('apollo-server')
+const { ApolloServer, PubSub } = require('apollo-server')
+const pubsub = new PubSub()
 
 // Import environment variables
 require('dotenv').config()
@@ -42,6 +43,7 @@ const server = new ApolloServer({
   context: ({ req }) => {
     return {
       ...req,
+      pubsub,
       User,
       Package,
       Contact,

@@ -1,4 +1,6 @@
 const { AuthenticationError } = require('apollo-server-errors')
+const { withFilter, PubSub } = require('apollo-server')
+const pubsub = new PubSub()
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
@@ -12,6 +14,10 @@ const checkAuth = (userId) => {
   if (!userId) {
     throw new AuthenticationError('Please login to perform this action')
   }
+}
+
+function newEscalationSubscribe( _, args, { pubsub } ){
+  return pubsub.asyncIterator('NEW_ESCALATION')
 }
 
 module.exports = {
@@ -690,6 +696,7 @@ module.exports = {
         }
       )
 
+      pubsub.publish('NEW_ESCALATION', { ar: doc })
       return updatedAccount
     },
 
@@ -759,5 +766,18 @@ module.exports = {
       // Return the new CaseCategory documents to the client
       return caseCategories
     },
+  },
+
+  Subscription: {
+    newAR: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator('NEW_ESCALATION'),
+        (payload, variables) => {
+          console.log('Payload', payload)
+          console.log('Variables', variables)
+          return payload.assigned_to === variables.dept;
+        }
+      )
+    }
   }
 }

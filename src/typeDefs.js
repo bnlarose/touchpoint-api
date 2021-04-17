@@ -106,6 +106,10 @@ module.exports = gql`
     bulkCreateCaseCategories(docs: [CaseCategoryInput]!): [CaseCategory]
   }
 
+  type Subscription {
+    newAR(dept: String!): ActionRequest
+  }
+
   """
   The AuthPayload is returned upon successful user logins and
   contains both the authorizing token and details of the currently

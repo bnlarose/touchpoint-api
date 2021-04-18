@@ -26,6 +26,7 @@ module.exports = gql`
 
     # DASHBOARD QUERIES
     getManagerFacets(dept: String!): [ManagerFacets]
+    getSupervisorFacets(dept: String!): [SupervisorFacets]
   }
 
   type Mutation {
@@ -272,6 +273,14 @@ module.exports = gql`
   }
 
   type ManagerFacets{
+    interactionChannels: [CommonFacet]
+    interactionDates: [DateFacet]
+    arRequestTypes: [CommonFacet]
+    arStatuses: [CommonFacet]
+  }
+
+  type SupervisorFacets{
+    interactionByAgents: [CommonFacet]
     interactionChannels: [CommonFacet]
     interactionDates: [DateFacet]
     arRequestTypes: [CommonFacet]

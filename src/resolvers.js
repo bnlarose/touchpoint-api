@@ -450,6 +450,124 @@ module.exports = {
 
       return userARs
     },
+
+    getManagerFacets: async ( _, { dept }, { Account, userId } ) => {
+      // Check if the user making the request is authorized
+      checkAuth(userId)
+
+      const filter = {
+        'cases.interactions.recorded_by.department': dept
+      }
+
+      const managerFacets = await Account.aggregate(
+        [
+          {
+            '$match': {
+              'cases': {
+                '$ne': []
+              }
+            }
+          }, {
+            '$project': {
+              'account_number': 1,
+              'cases': 1
+            }
+          }, {
+            '$unwind': {
+              'path': '$cases',
+              'preserveNullAndEmptyArrays': false
+            }
+          }, {
+            '$unwind': {
+              'path': '$cases.interactions',
+              'preserveNullAndEmptyArrays': false
+            }
+          }, {
+            '$lookup': {
+              'from': 'users',
+              'localField': 'cases.interactions.recorded_by',
+              'foreignField': '_id',
+              'as': 'cases.interactions.user'
+            }
+          }, {
+            '$addFields': {
+              'cases.interactions.recorded_by': {
+                '$first': '$cases.interactions.user'
+              }
+            }
+          }, {
+            '$match': filter
+          }, {
+            '$unwind': {
+              'path': '$cases.interactions.action_requests',
+              'preserveNullAndEmptyArrays': true
+            }
+          }, {
+            '$lookup': {
+              'from': 'users',
+              'localField': 'cases.interactions.action_requests.requested_by',
+              'foreignField': '_id',
+              'as': 'cases.interactions.action_requests.request_user'
+            }
+          }, {
+            '$lookup': {
+              'from': 'users',
+              'localField': 'cases.interactions.action_requests.claimed_by',
+              'foreignField': '_id',
+              'as': 'cases.interactions.action_requests.claim_user'
+            }
+          }, {
+            '$set': {
+              'cases.interactions.action_requests.requested_by': {
+                '$first': '$cases.interactions.action_requests.request_user'
+              },
+              'cases.interactions.action_requests.claimed_by': {
+                '$first': '$cases.interactions.action_requests.claim_user'
+              }
+            }
+          }, {
+            '$facet': {
+              'interactionChannels': [
+                {
+                  '$sortByCount': '$cases.interactions.channel'
+                }
+              ],
+              'interactionDates': [
+                {
+                  '$group': {
+                    '_id': {
+                      'year': {
+                        '$year': '$cases.interactions.date'
+                      },
+                      'month': {
+                        '$month': '$cases.interactions.date'
+                      },
+                      'day': {
+                        '$dayOfMonth': '$cases.interactions.date'
+                      }
+                    },
+                    'count': {
+                      '$sum': 1
+                    }
+                  }
+                }
+              ],
+              'arRequestTypes': [
+                {
+                  '$sortByCount': '$cases.interactions.action_requests.request_type'
+                }
+              ],
+              'arStatuses': [
+                {
+                  '$sortByCount': '$cases.interactions.action_requests.status'
+                }
+              ]
+            }
+          }
+        ]
+      )
+      return managerFacets
+    },
   },
 
   Mutation: {

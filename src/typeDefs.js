@@ -23,6 +23,9 @@ module.exports = gql`
     # ACTION REQUEST QUERIES
     getDeptARs(dept: String!): [AssignedEscalation]
     getUserClaimedARs(claimerId: ID!): [AssignedEscalation]
+
+    # DASHBOARD QUERIES
+    getManagerFacets(dept: String!): [ManagerFacets]
   }
 
   type Mutation {
@@ -250,6 +253,29 @@ module.exports = gql`
   type AssignedEscalation{
     caseId: ID!
     ar: ActionRequest!
+  }
+
+  type CommonFacet{
+    _id: String
+    count: Int
+  }
+
+  type DateFacet{
+    _id: DateId
+    count: Int
+  }
+
+  type DateId{
+    year: Int
+    month: Int
+    day: Int
+  }
+
+  type ManagerFacets{
+    interactionChannels: [CommonFacet]
+    interactionDates: [DateFacet]
+    arRequestTypes: [CommonFacet]
+    arStatuses: [CommonFacet]
   }
 
   """

@@ -536,14 +536,9 @@ module.exports = {
                 {
                   '$group': {
                     '_id': {
-                      'year': {
-                        '$year': '$cases.interactions.date'
-                      },
-                      'month': {
-                        '$month': '$cases.interactions.date'
-                      },
-                      'day': {
-                        '$dayOfMonth': '$cases.interactions.date'
+                      '$dateToString': {
+                        'format': '%Y-%m-%d',
+                        'date': '$cases.interactions.date'
                       }
                     },
                     'count': {
@@ -659,14 +654,9 @@ module.exports = {
                 {
                   '$group': {
                     '_id': {
-                      'year': {
-                        '$year': '$cases.interactions.date'
-                      },
-                      'month': {
-                        '$month': '$cases.interactions.date'
-                      },
-                      'day': {
-                        '$dayOfMonth': '$cases.interactions.date'
+                      '$dateToString': {
+                        'format': '%Y-%m-%d',
+                        'date': '$cases.interactions.date'
                       }
                     },
                     'count': {

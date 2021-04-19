@@ -274,7 +274,7 @@ module.exports = gql`
 
   type ManagerFacets{
     interactionChannels: [CommonFacet]
-    interactionDates: [DateFacet]
+    interactionDates: [CommonFacet]
     arRequestTypes: [CommonFacet]
     arStatuses: [CommonFacet]
   }
@@ -282,7 +282,7 @@ module.exports = gql`
   type SupervisorFacets{
     interactionByAgents: [CommonFacet]
     interactionChannels: [CommonFacet]
-    interactionDates: [DateFacet]
+    interactionDates: [CommonFacet]
     arRequestTypes: [CommonFacet]
     arStatuses: [CommonFacet]
   }

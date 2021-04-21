@@ -413,6 +413,13 @@ module.exports = {
       // Check if the user making the request is authorized
       checkAuth(userId)
 
+      /**
+       * This filter is used in two pipeline stages and ensure that, in the
+       * first instance, that only those Accounts that include esclations that
+       * have been claimed by this user are selected, then selects those
+       * specific escalations after the cases and interactions arrays have been
+       * deconstructed
+       */
       const filter = {
         'cases.interactions.action_requests.claimed_by': mongoose.Types.ObjectId(claimerId)
       }
@@ -421,12 +428,12 @@ module.exports = {
         [
           {
             '$match': filter
-          }, {
+          }, { // Creates a new dedicated document for every case in this array
             '$unwind': {
               'path': '$cases',
               'preserveNullAndEmptyArrays': false
             }
-          }, {
+          }, { // Creates a new dedicated document for every interaction in this array
             '$unwind': {
               'path': '$cases.interactions',
               'preserveNullAndEmptyArrays': false
@@ -455,54 +462,61 @@ module.exports = {
       // Check if the user making the request is authorized
       checkAuth(userId)
 
+      /**
+       * This filter is used to ensure that only interactions recorded by
+       * members of the user's department are included
+       */
       const filter = {
         'cases.interactions.recorded_by.department': dept
       }
 
       const managerFacets = await Account.aggregate(
         [
-          {
+          { // Filter out Account documents that don't have any recorded cases
             '$match': {
               'cases': {
                 '$ne': []
               }
             }
-          }, {
+          }, { // Only keep the Account number and case array data elements
             '$project': {
               'account_number': 1,
               'cases': 1
             }
           }, {
+            // Create a unique document for every Object in this array
             '$unwind': {
               'path': '$cases',
               'preserveNullAndEmptyArrays': false
             }
           }, {
+            // Create a unique document for every Object in this array
             '$unwind': {
               'path': '$cases.interactions',
               'preserveNullAndEmptyArrays': false
             }
           }, {
+            // Use the ID stored in recorded_by to find the user details
             '$lookup': {
               'from': 'users',
               'localField': 'cases.interactions.recorded_by',
               'foreignField': '_id',
               'as': 'cases.interactions.user'
             }
-          }, {
+          }, { // Replace recorded_by with the fetched document
             '$addFields': {
               'cases.interactions.recorded_by': {
                 '$first': '$cases.interactions.user'
               }
             }
-          }, {
+          }, { // Only keep Interactions recorded by users in this department
             '$match': filter
           }, {
             '$unwind': {
               'path': '$cases.interactions.action_requests',
               'preserveNullAndEmptyArrays': true
             }
-          }, {
+          }, { // Find the details of the user who made the Escalation
             '$lookup': {
               'from': 'users',
               'localField': 'cases.interactions.action_requests.requested_by',
@@ -510,14 +524,14 @@ module.exports = {
               'as': 'cases.interactions.action_requests.request_user'
             }
           }, {
-            '$lookup': {
+            '$lookup': { // Find the details of the user who made the Escalation
               'from': 'users',
               'localField': 'cases.interactions.action_requests.claimed_by',
               'foreignField': '_id',
               'as': 'cases.interactions.action_requests.claim_user'
             }
           }, {
-            '$set': {
+            '$set': { // Replace the IDs with the fetched documents
               'cases.interactions.action_requests.requested_by': {
                 '$first': '$cases.interactions.action_requests.request_user'
               },
@@ -528,12 +542,12 @@ module.exports = {
           }, {
             '$facet': {
               'interactionChannels': [
-                {
+                { // Count the number of Interactions by channel
                   '$sortByCount': '$cases.interactions.channel'
                 }
               ],
               'interactionDates': [
-                {
+                { // Group interactions by Date and get a count
                   '$group': {
                     '_id': {
                       '$dateToString': {
@@ -548,12 +562,12 @@ module.exports = {
                 }
               ],
               'arRequestTypes': [
-                {
+                { // Count Escalations by Request Type
                   '$sortByCount': '$cases.interactions.action_requests.request_type'
                 }
               ],
               'arStatuses': [
-                {
+                { // Count Escalations by Status
                   '$sortByCount': '$cases.interactions.action_requests.status'
                 }
               ]
@@ -561,6 +575,7 @@ module.exports = {
           }
         ]
       )
+
       return managerFacets
     },
 
@@ -568,34 +583,36 @@ module.exports = {
       // Check if the user making the request is authorized
       checkAuth(userId)
 
+      // Matches those interactions recorded by members of the User's department
       const filter = {
         'cases.interactions.recorded_by.department': dept
       }
 
       const supervisorFacets = await Account.aggregate(
         [
-          {
+          { // Ignore Accounts without cases
             '$match': {
               'cases': {
                 '$ne': []
               }
             }
-          }, {
+          }, { // Only keep the Account number and Case array of these documents
             '$project': {
               'account_number': 1,
               'cases': 1
             }
           }, {
-            '$unwind': {
+            '$unwind': { // Create a new Document for each element in this array
               'path': '$cases',
               'preserveNullAndEmptyArrays': false
             }
           }, {
-            '$unwind': {
+            '$unwind': { // Create a new Document for each element in this array
               'path': '$cases.interactions',
               'preserveNullAndEmptyArrays': false
             }
           }, {
+            // Use the ID stored in recorded_by to fetch the user document
             '$lookup': {
               'from': 'users',
               'localField': 'cases.interactions.recorded_by',
@@ -603,19 +620,20 @@ module.exports = {
               'as': 'cases.interactions.user'
             }
           }, {
-            '$addFields': {
+            '$addFields': { // Swap the ID for the full User document
               'cases.interactions.recorded_by': {
                 '$first': '$cases.interactions.user'
               }
             }
-          }, {
+          }, { // Apply the Department filter
             '$match': filter
           }, {
-            '$unwind': {
+            '$unwind': { // Create a new Document for each element in this array
               'path': '$cases.interactions.action_requests',
               'preserveNullAndEmptyArrays': true
             }
           }, {
+            // Use the ID stored in requested_by to fetch the user document
             '$lookup': {
               'from': 'users',
               'localField': 'cases.interactions.action_requests.requested_by',
@@ -623,6 +641,7 @@ module.exports = {
               'as': 'cases.interactions.action_requests.request_user'
             }
           }, {
+            // Use the ID stored in claimed_by to fetch the user document
             '$lookup': {
               'from': 'users',
               'localField': 'cases.interactions.action_requests.claimed_by',
@@ -630,7 +649,7 @@ module.exports = {
               'as': 'cases.interactions.action_requests.claim_user'
             }
           }, {
-            '$set': {
+            '$set': { // Replace the IDs with the full User documents
               'cases.interactions.action_requests.requested_by': {
                 '$first': '$cases.interactions.action_requests.request_user'
               },
@@ -641,17 +660,17 @@ module.exports = {
           }, {
             '$facet': {
               'interactionByAgents': [
-                {
+                { // Count the number of interactions made by each agent
                   '$sortByCount': '$cases.interactions.recorded_by.username'
                 }
               ],
               'interactionChannels': [
-                {
+                { // Count the number of interactions made across each communcation channel
                   '$sortByCount': '$cases.interactions.channel'
                 }
               ],
               'interactionDates': [
-                {
+                { // Group interactions by date and count number
                   '$group': {
                     '_id': {
                       '$dateToString': {
@@ -666,12 +685,12 @@ module.exports = {
                 }
               ],
               'arRequestTypes': [
-                {
+                { // Count Escalations by request_type
                   '$sortByCount': '$cases.interactions.action_requests.request_type'
                 }
               ],
               'arStatuses': [
-                {
+                { // Count Escalations by status
                   '$sortByCount': '$cases.interactions.action_requests.status'
                 }
               ]
